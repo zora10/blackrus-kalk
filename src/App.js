@@ -6,7 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Container, Box, TextField, Button, Typography, List, ListItem, ListItemText, Paper, Grid, IconButton } from '@mui/material';
 import theme from './theme';
 
-const API_URL = 'http://82.115.6.29:3000/api'; // Замените на ваш IP сервера
+const API_URL = 'http://localhost:3001/api'; // Замените на ваш IP сервера
 
 function App() {
   const [items, setItems] = useState([]);
