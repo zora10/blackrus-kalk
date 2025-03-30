@@ -108,7 +108,7 @@ function App() {
   const handleDeleteItem = async (id) => {
     try {
       // Отправляем DELETE-запрос на сервер с нужным id
-      const response = await fetch(`/api/items/${id}`, {
+      const response = await fetch(`${API_URL}/items/${id}`, {
         method: 'DELETE',  // Указываем метод запроса DELETE
         headers: {
           'Content-Type': 'application/json',  // Устанавливаем тип контента
