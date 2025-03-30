@@ -6,7 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Container, Box, TextField, Button, Typography, List, ListItem, ListItemText, Paper, Grid, IconButton } from '@mui/material';
 import theme from './theme';
 
-const API_URL = 'https://blackrussia-kalkul.ru/api/'; // Замените на ваш IP сервера
+const API_URL = 'https://blackrussia-kalkul.ru/api'; // Замените на ваш IP сервера
 
 function App() {
   const [items, setItems] = useState([]);
