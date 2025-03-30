@@ -18,13 +18,9 @@ function App() {
   const [isIdSubmitted, setIsIdSubmitted] = useState(false);
 
   useEffect(() => {
-    // Получаем ID пользователя из Telegram WebApp API
-    if (window.Telegram && window.Telegram.WebApp) {
-      const user = window.Telegram.WebApp.initDataUnsafe; // Получаем unsafe data, если включен доступ
-      const userId = user.user.id; // Извлекаем ID пользователя
-      setTelegramId(userId); // Сохраняем ID в состояние
-      setIsIdSubmitted(true); // Устанавливаем флаг, что ID получен
-    }
+    const tg = window.Telegram.WebApp;
+    const userId = tg.initDataUnsafe.user.id;
+    setTelegramId(userId); // Устанавливаем ID пользователя из Telegram WebApp
   }, []);
 
   useEffect(() => {
@@ -108,28 +104,30 @@ function App() {
     }
   };
 
+  const handleSubmitId = (e) => {
+    e.preventDefault();
+    if (telegramId.trim()) {
+      setIsIdSubmitted(true);
+    }
+  };
+
   const handleDeleteItem = async (id) => {
     try {
-      // Отправляем DELETE-запрос на сервер с нужным id
       const response = await fetch(`${API_URL}/items/${id}`, {
-        method: 'DELETE',  // Указываем метод запроса DELETE
+        method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json',  // Устанавливаем тип контента
+          'Content-Type': 'application/json',
         },
       });
   
       if (!response.ok) {
-        // Если запрос завершился с ошибкой, выбрасываем ошибку
         const errorData = await response.json();
         throw new Error(errorData.error || 'Unknown error');
       }
   
-      const data = await response.json();  // Получаем ответ от сервера
+      const data = await response.json();
       console.log('Item deleted:', data);
-  
-      // Обновляем состояние items, удалив элемент по id
       setItems((prevItems) => prevItems.filter(item => item.id !== id));
-  
     } catch (error) {
       console.error('Error deleting item:', error.message);
     }
@@ -144,6 +142,29 @@ function App() {
             <Typography component="h1" variant="h5" gutterBottom sx={{ color: '#ffffff' }}>
               Калькулятор перепродаж
             </Typography>
+            <Typography variant="body1" sx={{ color: '#ffffff', mb: 2 }}>
+              Ваш Telegram ID: {telegramId} {/* Выводим ID прямо на странице */}
+            </Typography>
+            <Box component="form" onSubmit={handleSubmitId} sx={{ mt: 1, width: '100%' }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Ваш Telegram ID"
+                value={telegramId}
+                onChange={(e) => setTelegramId(e.target.value)}
+                autoFocus
+                sx={{ input: { color: '#ffffff' } }}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="outlined"
+                sx={{ mt: 3, mb: 2, color: '#ffffff', borderColor: '#121212' }}
+              >
+                Начать работу
+              </Button>
+            </Box>
           </Box>
         </Container>
       </ThemeProvider>
@@ -154,33 +175,18 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container maxWidth="md" sx={{ pb: 4 }}>
-        {/* Ваш контент приложения */}
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
-              <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-                Статистика
-              </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={4}>
-                  <Typography sx={{ color: '#ffffff' }}>
-                    Доход: ${stats.total_income || 0}
-                  </Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  <Typography sx={{ color: '#ffffff' }}>
-                    Расходы: ${stats.total_expenses || 0}
-                  </Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  <Typography sx={{ color: '#ffffff' }}>
-                    Прибыль: $ {stats.total_profit || 0}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Paper>
+        <Box sx={{ mt: 2, mb: 4 }}>
+          <Typography variant="h5" component="h1" gutterBottom align="center" sx={{ color: '#ffffff' }}>
+            Калькулятор перепродаж
+          </Typography>
+          <Typography variant="body1" sx={{ color: '#ffffff', mb: 2 }}>
+            Ваш Telegram ID: {telegramId} {/* Выводим ID на всех страницах */}
+          </Typography>
+
+          <Grid container spacing={2}>
+            {/* Ваш остальной код */}
           </Grid>
-        </Grid>
+        </Box>
       </Container>
     </ThemeProvider>
   );
