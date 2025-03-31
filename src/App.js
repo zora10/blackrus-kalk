@@ -139,7 +139,7 @@ function App() {
       <Container maxWidth="md" sx={{ pb: 4 }}>
         <Box sx={{ mt: 2, mb: 4 }}>
           <Typography variant="h5" component="h1" gutterBottom align="center" sx={{ color: '#ffffff' }}>
-            Калькулятор перепродаж
+            ПЕРЕКУПЕР
           </Typography>
 
           <Grid container spacing={2}>
