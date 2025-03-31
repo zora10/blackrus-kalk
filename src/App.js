@@ -100,11 +100,11 @@ function App() {
         setSelectedItem(null);
         loadItems();
         loadStats();
-        alert('Продажа успешно зарегистрирована');
+        
       }
     } catch (error) {
       console.error('Error selling item:', error);
-      alert('Ошибка при регистрации продажи');
+      
     }
   };
 
