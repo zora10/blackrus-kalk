@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import CloseIcon from '@mui/icons-material/Close';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Container, Box, TextField, Button, Typography, List, ListItem, ListItemText, Paper, Grid, IconButton } from '@mui/material';
+import { Container, Box, TextField, Button, Typography, Paper, Grid } from '@mui/material';
 import theme from './theme';
 
 const API_URL = 'https://blackrussia-kalkul.ru/api'; // Замените на ваш IP сервера
@@ -17,7 +16,7 @@ function App() {
   const [isIdSubmitted, setIsIdSubmitted] = useState(false);
 
   useEffect(() => {
-    // Проверка на доступность Telegram Web App API
+    // Проверка на доступность Telegram Web App API и парсинг ID
     if (window.Telegram && window.Telegram.WebApp) {
       const user = window.Telegram.WebApp.initDataUnsafe;
       if (user && user.user) {
@@ -128,40 +127,9 @@ function App() {
     }
   };
 
-  // Если ID уже получен через Telegram Web App API, пропускаем форму
+  // Если ID уже получен через Telegram WebApp API, загружаем калькулятор
   if (!isIdSubmitted) {
-    return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Container maxWidth="sm">
-          <Box sx={{ mt: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Typography component="h1" variant="h5" gutterBottom sx={{ color: '#ffffff' }}>
-              Калькулятор перепродаж
-            </Typography>
-            <Box component="form" onSubmit={handleSubmitId} sx={{ mt: 1, width: '100%' }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                label="Ваш Telegram ID"
-                value={telegramId}
-                onChange={(e) => setTelegramId(e.target.value)}
-                autoFocus
-                sx={{ input: { color: '#ffffff' } }}
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="outlined"
-                sx={{ mt: 3, mb: 2, color: '#ffffff', borderColor: '#121212' }}
-              >
-                Начать работу
-              </Button>
-            </Box>
-          </Box>
-        </Container>
-      </ThemeProvider>
-    );
+    return <div>Загрузка...</div>; // Пока ID не получен, показываем индикатор загрузки
   }
 
   return (
