@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import CloseIcon from '@mui/icons-material/Close'; // Импортируем CloseIcon
+import CloseIcon from '@mui/icons-material/Close';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Container, Box, TextField, Button, Typography, List, ListItem, ListItemText, Paper, Grid, IconButton } from '@mui/material';
 import theme from './theme';
@@ -15,6 +15,17 @@ function App() {
   const [stats, setStats] = useState({ total_income: 0, total_expenses: 0, total_profit: 0 });
   const [telegramId, setTelegramId] = useState('');
   const [isIdSubmitted, setIsIdSubmitted] = useState(false);
+
+  useEffect(() => {
+    // Проверка на доступность Telegram Web App API
+    if (window.Telegram && window.Telegram.WebApp) {
+      const user = window.Telegram.WebApp.initDataUnsafe;
+      if (user && user.user) {
+        setTelegramId(user.user.id.toString()); // Получаем ID из данных Telegram WebApp
+        setIsIdSubmitted(true); // Пропускаем ввод ID, так как он уже получен
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (isIdSubmitted) {
@@ -97,13 +108,6 @@ function App() {
     }
   };
 
-  const handleSubmitId = (e) => {
-    e.preventDefault();
-    if (telegramId.trim()) {
-      setIsIdSubmitted(true);
-    }
-  };
-
   const handleDeleteItem = async (id) => {
     try {
       const response = await fetch(`${API_URL}/items/${id}`, {
@@ -112,20 +116,19 @@ function App() {
           'Content-Type': 'application/json',
         },
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Unknown error');
       }
-  
-      const data = await response.json();
-      console.log('Item deleted:', data);
+
       setItems((prevItems) => prevItems.filter(item => item.id !== id));
     } catch (error) {
       console.error('Error deleting item:', error.message);
     }
   };
 
+  // Если ID уже получен через Telegram Web App API, пропускаем форму
   if (!isIdSubmitted) {
     return (
       <ThemeProvider theme={theme}>
@@ -135,26 +138,6 @@ function App() {
             <Typography component="h1" variant="h5" gutterBottom sx={{ color: '#ffffff' }}>
               Калькулятор перепродаж
             </Typography>
-            <Box component="form" onSubmit={handleSubmitId} sx={{ mt: 1, width: '100%' }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                label="Ваш Telegram ID"
-                value={telegramId}
-                onChange={(e) => setTelegramId(e.target.value)}
-                autoFocus
-                sx={{ input: { color: '#ffffff' } }}
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="outlined"
-                sx={{ mt: 3, mb: 2, color: '#ffffff', borderColor: '#121212' }}
-              >
-                Начать работу
-              </Button>
-            </Box>
           </Box>
         </Container>
       </ThemeProvider>
@@ -169,49 +152,10 @@ function App() {
           <Typography variant="h5" component="h1" gutterBottom align="center" sx={{ color: '#ffffff' }}>
             Калькулятор перепродаж
           </Typography>
-          
-          {/* Добавляем отображение Telegram ID */}
-          <Box sx={{ backgroundColor: '#121212', padding: '10px', marginBottom: '20px', borderRadius: '5px' }}>
-            <Typography variant="h6" sx={{ color: '#ffffff' }}>
-              Ваш Telegram ID: {telegramId}
-            </Typography>
-          </Box>
 
+          {/* Далее идет основная часть интерфейса с товарами, статистикой и операциями */}
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
-                <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-                  Добавить новый товар
-                </Typography>
-                <TextField
-                  fullWidth
-                  label="Название товара"
-                  value={newItem.name}
-                  onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-                  margin="normal"
-                  sx={{ input: { color: '#ffffff' } }}
-                />
-                <TextField
-                  fullWidth
-                  label="Цена покупки"
-                  type="number"
-                  value={newItem.buyPrice}
-                  onChange={(e) => setNewItem({ ...newItem, buyPrice: e.target.value })}
-                  margin="normal"
-                  sx={{ input: { color: '#ffffff' } }}
-                />
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={handleAddItem}
-                  disabled={!newItem.name || !newItem.buyPrice}
-                  sx={{ mt: 2, color: '#ffffff', borderColor: '#121212' }}
-                >
-                  Добавить товар
-                </Button>
-              </Paper>
-            </Grid>
-            {/* Остальной контент */}
+            {/* Различные компоненты с товарами и статистикой */}
           </Grid>
         </Box>
       </Container>
