@@ -194,74 +194,74 @@ function App() {
               </Paper>
             </Grid>
             <Grid item xs={6}>
-                      <Paper sx={{ p: 2, bgcolor: '#121212', border: '2px solid #121212' }}>
-                        <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-                          Продать товар
-                        </Typography>
-                        <TextField
-                          fullWidth
-                          select
-                          label="Выберите товар"
-                          value={selectedItem ? selectedItem.id : ''}
-                          onChange={(e) => setSelectedItem(items.find(item => item.id === Number(e.target.value)))}
-                          margin="normal"
-                          SelectProps={{
-                            native: true,
-                          }}
-                          sx={{ select: { color: '#ffffff' } }}
-                        >
-                          <option value="">Выберите товар</option>
-                          {items.filter(item => !item.sell_price).map((item) => (
-                            <option key={item.id} value={item.id}>{item.name}</option>
-                          ))}
-                        </TextField>
-                        <TextField
-                          fullWidth
-                          label="Сумма продажи"
-                          type="number"
-                          value={sellPrice}
-                          onChange={(e) => setSellPrice(e.target.value)}
-                          margin="normal"
-                          sx={{ input: { color: '#ffffff' } }}
-                        />
-                        <Button
-                          fullWidth
-                          variant="outlined"
-                          onClick={handleSellItem}
-                          disabled={!selectedItem || !sellPrice}
-                          sx={{ mt: 2, color: '#ffffff', borderColor: '#121212' }}
-                        >
-                          Продать товар
-                        </Button>
-                      </Paper>
-                    </Grid>
-                  </Grid>
-        
-            {/* Статистика */}
-            <Grid item xs={12}>
-              <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
+              <Paper sx={{ p: 2, bgcolor: '#121212', border: '2px solid #121212' }}>
                 <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-                  Статистика
+                  Продать товар
                 </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={4}>
-                    <Typography sx={{ color: '#ffffff' }}>
-                      Доход: ${stats.total_income || 0}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography sx={{ color: '#ffffff' }}>
-                      Расходы: ${stats.total_expenses || 0}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography sx={{ color: '#ffffff' }}>
-                      Прибыль: $ {stats.total_profit || 0}
-                    </Typography>
-                  </Grid>
-                </Grid>
+                <TextField
+                  fullWidth
+                  select
+                  label="Выберите товар"
+                  value={selectedItem ? selectedItem.id : ''}
+                  onChange={(e) => setSelectedItem(items.find(item => item.id === Number(e.target.value)))}
+                  margin="normal"
+                  SelectProps={{
+                    native: true,
+                  }}
+                  sx={{ select: { color: '#ffffff' } }}
+                >
+                  <option value="">Выберите товар</option>
+                  {items.filter(item => !item.sell_price).map((item) => (
+                    <option key={item.id} value={item.id}>{item.name}</option>
+                  ))}
+                </TextField>
+                <TextField
+                  fullWidth
+                  label="Сумма продажи"
+                  type="number"
+                  value={sellPrice}
+                  onChange={(e) => setSellPrice(e.target.value)}
+                  margin="normal"
+                  sx={{ input: { color: '#ffffff' } }}
+                />
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  onClick={handleSellItem}
+                  disabled={!selectedItem || !sellPrice}
+                  sx={{ mt: 2, color: '#ffffff', borderColor: '#121212' }}
+                >
+                  Продать товар
+                </Button>
               </Paper>
             </Grid>
+          </Grid>
+        
+          {/* Статистика */}
+          <Grid item xs={12}>
+            <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
+              <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
+                Статистика
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <Typography sx={{ color: '#ffffff' }}>
+                    Доход: ${stats.total_income || 0}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography sx={{ color: '#ffffff' }}>
+                    Расходы: ${stats.total_expenses || 0}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography sx={{ color: '#ffffff' }}>
+                    Прибыль: $ {stats.total_profit || 0}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
 
             {/* Фильтрация по дате */}
             <Grid item xs={12}>
