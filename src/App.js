@@ -73,7 +73,7 @@ function App() {
         setNewItem({ name: '', buyPrice: '' });
         loadItems();
         loadStats();
-        alert('Товар успешно добавлен');
+        
       }
     } catch (error) {
       console.error('Error adding item:', error);
