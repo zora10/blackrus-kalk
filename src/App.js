@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Container, Box, TextField, Button, Typography, Paper, Grid } from '@mui/material';
+import { Container, Box, TextField, Button, Typography, Paper, Grid, List, ListItem, ListItemText, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close'; // Импортируем CloseIcon
 import theme from './theme';
 
 const API_URL = 'https://blackrussia-kalkul.ru/api'; // Замените на ваш IP сервера
@@ -223,10 +224,8 @@ function App() {
                       </Paper>
                     </Grid>
                   </Grid>
-                  
                 </Typography>
-                
-                
+
                 <Grid item xs={12}>
                   <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
                     <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
@@ -238,167 +237,14 @@ function App() {
               </Paper>
             </Grid>
 
-            
-
             <Grid item xs={12}>
               <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
                 <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-                  Статистика
+                  История операций
                 </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={4}>
-                    <Typography sx={{ color: '#ffffff' }}>
-                      Доход: ${stats.total_income || 0}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography sx={{ color: '#ffffff' }}>
-                      Расходы: ${stats.total_expenses || 0}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography sx={{ color: '#ffffff' }}>
-                      Прибыль: $ {stats.total_profit || 0}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Grid>
-            <Grid item xs={12}>
-              <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
-                <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-                  Фильтр по дате
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      label="Дата от"
-                      type="date"
-                      InputLabelProps={{
-                        shrink: true,
-                        style: { color: '#ffffff' }
-                      }}
-                      InputProps={{
-                        style: { color: '#ffffff' }
-                      }}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          '& fieldset': {
-                            borderColor: '#ffffff',
-                          },
-                          '&:hover fieldset': {
-                            borderColor: '#ffffff',
-                          },
-                        },
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      label="Дата до"
-                      type="date"
-                      InputLabelProps={{
-                        shrink: true,
-                        style: { color: '#ffffff' }
-                      }}
-                      InputProps={{
-                        style: { color: '#ffffff' }
-                      }}
-                      sx={{
-                        '& .MuiOutlinedInput-root': {
-                          '& fieldset': {
-                            borderColor: '#ffffff',
-                          },
-                          '&:hover fieldset': {
-                            borderColor: '#ffffff',
-                          },
-                        },
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      fullWidth
-                      variant="outlined"
-                      sx={{ mt: 1, color: '#ffffff', borderColor: '#ffffff' }}
-                    >
-                      Применить фильтр
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Grid>
-            <Grid item xs={12}>
-              <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
-                <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-                  Статистика
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={6} md={3}>
-                    <Paper sx={{ p: 2, bgcolor: '#1e1e1e', textAlign: 'center' }}>
-                      <Typography variant="body2" sx={{ color: '#ffffff' }}>
-                        Всего инвестировано
-                      </Typography>
-                      <Typography variant="h6" sx={{ color: '#ffffff' }}>
-                        ₽{items.reduce((total, item) => total + parseFloat(item.buy_price || 0), 0).toFixed(2)}
-                      </Typography>
-                    </Paper>
-                  </Grid>
-                  <Grid item xs={6} md={3}>
-                    <Paper sx={{ p: 2, bgcolor: '#1e1e1e', textAlign: 'center' }}>
-                      <Typography variant="body2" sx={{ color: '#ffffff' }}>
-                        Текущая стоимость
-                      </Typography>
-                      <Typography variant="h6" sx={{ color: '#ffffff' }}>
-                        ₽{items.reduce((total, item) => total + (item.sell_price ? parseFloat(item.sell_price) : parseFloat(item.buy_price || 0)), 0).toFixed(2)}
-                      </Typography>
-                    </Paper>
-                  </Grid>
-                  <Grid item xs={6} md={3}>
-                    <Paper sx={{ p: 2, bgcolor: '#1e1e1e', textAlign: 'center' }}>
-                      <Typography variant="body2" sx={{ color: '#ffffff' }}>
-                        Прибыль/Убыток
-                      </Typography>
-                      {(() => {
-                        const profit = items.reduce((total, item) => total + (item.sell_price ? parseFloat(item.sell_price) - parseFloat(item.buy_price || 0) : 0), 0);
-                        return (
-                          <Typography variant="h6" sx={{ color: profit >= 0 ? '#4caf50' : '#f44336' }}>
-                            ₽{profit.toFixed(2)}
-                          </Typography>
-                        );
-                      })()}
-                    </Paper>
-                  </Grid>
-                  <Grid item xs={6} md={3}>
-                    <Paper sx={{ p: 2, bgcolor: '#1e1e1e', textAlign: 'center' }}>
-                      <Typography variant="body2" sx={{ color: '#ffffff' }}>
-                        ROI
-                      </Typography>
-                      {(() => {
-                        const invested = items.reduce((total, item) => total + parseFloat(item.buy_price || 0), 0);
-                        const profit = items.reduce((total, item) => total + (item.sell_price ? parseFloat(item.sell_price) - parseFloat(item.buy_price || 0) : 0), 0);
-                        const roi = invested > 0 ? (profit / invested) * 100 : 0;
-                        return (
-                          <Typography variant="h6" sx={{ color: roi >= 0 ? '#4caf50' : '#f44336' }}>
-                            {roi.toFixed(2)}%
-                          </Typography>
-                        );
-                      })()}
-                    </Paper>
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Grid>
-            <Grid item xs={12}>
-            <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
-            <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-              История операций
-            </Typography>
-            <List sx={{ padding: 0, display: 'flex', flexDirection: 'column' }}> 
+                <List sx={{ padding: 0, display: 'flex', flexDirection: 'column' }}>
                   {items.map((item) => (
-                    <ListItem key={item.id}sx={{ padding: '0', marginBottom: '4px', display: 'flex', justifyContent: 'space-between' }}> {/* Убираем отступы и добавляем margin для ступенчатого эффекта */}
+                    <ListItem key={item.id} sx={{ padding: '0', marginBottom: '4px', display: 'flex', justifyContent: 'space-between' }}>
                       <ListItemText
                         secondary={`${item.name} Куплено : $${item.buy_price}${item.sell_price ? ` | Продано : $${item.sell_price} | Прибыль : $${(item.sell_price - item.buy_price).toFixed(2)}` : ''}`}
                         sx={{
@@ -419,7 +265,7 @@ function App() {
                           },
                         }}
                       >
-                        <CloseIcon sx={{ fontSize: '16px', color: 'white' }} /> {/* Уменьшаем размер иконки */}
+                        <CloseIcon sx={{ fontSize: '16px', color: 'white' }} />
                       </IconButton>
                     </ListItem>
                   ))}
