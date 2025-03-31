@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Container, Box, TextField, Button, Typography, Paper, Grid, List, ListItem, ListItemText, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close'; // Импортируем CloseIcon
+import CloseIcon from '@mui/icons-material/Close';
 import theme from './theme';
 
 const API_URL = 'https://blackrussia-kalkul.ru/api'; // Замените на ваш IP сервера
@@ -16,8 +16,11 @@ function App() {
   const [telegramId, setTelegramId] = useState('');
   const [isIdSubmitted, setIsIdSubmitted] = useState(false);
 
+  // Для фильтрации по дате
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
   useEffect(() => {
-    // Проверка на доступность Telegram Web App API и парсинг ID
     if (window.Telegram && window.Telegram.WebApp) {
       const user = window.Telegram.WebApp.initDataUnsafe;
       if (user && user.user) {
@@ -68,12 +71,12 @@ function App() {
           buyPrice: Number(newItem.buyPrice)
         }),
       });
-      
+
       if (response.ok) {
         setNewItem({ name: '', buyPrice: '' });
         loadItems();
         loadStats();
-        
+        alert('Товар успешно добавлен');
       }
     } catch (error) {
       console.error('Error adding item:', error);
@@ -100,11 +103,11 @@ function App() {
         setSelectedItem(null);
         loadItems();
         loadStats();
-        
+        alert('Продажа успешно зарегистрирована');
       }
     } catch (error) {
       console.error('Error selling item:', error);
-      
+      alert('Ошибка при регистрации продажи');
     }
   };
 
@@ -128,9 +131,22 @@ function App() {
     }
   };
 
-  // Если ID уже получен через Telegram WebApp API, загружаем калькулятор
+  // Фильтрация элементов по дате
+  const handleApplyDateFilter = () => {
+    const filteredItems = items.filter(item => {
+      const itemDate = new Date(item.created_at);
+      const start = startDate ? new Date(startDate) : null;
+      const end = endDate ? new Date(endDate) : null;
+      return (
+        (!start || itemDate >= start) &&
+        (!end || itemDate <= end)
+      );
+    });
+    setItems(filteredItems);
+  };
+
   if (!isIdSubmitted) {
-    return <div>Загрузка...</div>; // Пока ID не получен, показываем индикатор загрузки
+    return <div>Загрузка...</div>;
   }
 
   return (
@@ -139,114 +155,125 @@ function App() {
       <Container maxWidth="md" sx={{ pb: 4 }}>
         <Box sx={{ mt: 2, mb: 4 }}>
           <Typography variant="h5" component="h1" gutterBottom align="center" sx={{ color: '#ffffff' }}>
-            ПЕРЕКУПЕР
+            Калькулятор перепродаж
           </Typography>
 
           <Grid container spacing={2}>
+            {/* Формы добавления и продажи товара */}
             <Grid item xs={12}>
               <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
                 <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                      <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
-                        <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-                          Купить товар
-                        </Typography>
-                        <TextField
-                          fullWidth
-                          label="Название товара"
-                          value={newItem.name}
-                          onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-                          margin="normal"
-                          sx={{ input: { color: '#ffffff' } }}
-                        />
-                        <TextField
-                          fullWidth
-                          label="Цена покупки"
-                          type="number"
-                          value={newItem.buyPrice}
-                          onChange={(e) => setNewItem({ ...newItem, buyPrice: e.target.value })}
-                          margin="normal"
-                          sx={{ input: { color: '#ffffff' } }}
-                        />
-                        <Button
-                          fullWidth
-                          variant="outlined"
-                          onClick={handleAddItem}
-                          disabled={!newItem.name || !newItem.buyPrice}
-                          sx={{ mt: 2, color: '#ffffff', borderColor: '#121212' }}
-                        >
-                          Добавить товар
-                        </Button>
-                      </Paper>
-                    </Grid>
-
-                    <Grid item xs={6}>
-                      <Paper sx={{ p: 2, bgcolor: '#121212', border: '2px solid #121212' }}>
-                        <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-                          Продать товар
-                        </Typography>
-                        <TextField
-                          fullWidth
-                          select
-                          label="Выберите товар"
-                          value={selectedItem ? selectedItem.id : ''}
-                          onChange={(e) => setSelectedItem(items.find(item => item.id === Number(e.target.value)))}
-                          margin="normal"
-                          SelectProps={{
-                            native: true,
-                          }}
-                          sx={{ select: { color: '#ffffff' } }}
-                        >
-                          <option value="">Выберите товар</option>
-                          {items.filter(item => !item.sell_price).map((item) => (
-                            <option key={item.id} value={item.id}>{item.name}</option>
-                          ))}
-                        </TextField>
-                        <TextField
-                          fullWidth
-                          label="Сумма продажи"
-                          type="number"
-                          value={sellPrice}
-                          onChange={(e) => setSellPrice(e.target.value)}
-                          margin="normal"
-                          sx={{ input: { color: '#ffffff' } }}
-                        />
-                        <Button
-                          fullWidth
-                          variant="outlined"
-                          onClick={handleSellItem}
-                          disabled={!selectedItem || !sellPrice}
-                          sx={{ mt: 2, color: '#ffffff', borderColor: '#121212' }}
-                        >
-                          Продать товар
-                        </Button>
-                      </Paper>
-                    </Grid>
-                  </Grid>
+                  Добавить новый товар
                 </Typography>
+                <TextField
+                  fullWidth
+                  label="Название товара"
+                  value={newItem.name}
+                  onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+                  margin="normal"
+                  sx={{ input: { color: '#ffffff' } }}
+                />
+                <TextField
+                  fullWidth
+                  label="Цена покупки"
+                  type="number"
+                  value={newItem.buyPrice}
+                  onChange={(e) => setNewItem({ ...newItem, buyPrice: e.target.value })}
+                  margin="normal"
+                  sx={{ input: { color: '#ffffff' } }}
+                />
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  onClick={handleAddItem}
+                  disabled={!newItem.name || !newItem.buyPrice}
+                  sx={{ mt: 2, color: '#ffffff', borderColor: '#121212' }}
+                >
+                  Добавить товар
+                </Button>
+              </Paper>
+            </Grid>
 
-                <Grid item xs={12}>
-                  <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
-                    <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-                      История транзакций
+            {/* Статистика */}
+            <Grid item xs={12}>
+              <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
+                <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
+                  Статистика
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
+                    <Typography sx={{ color: '#ffffff' }}>
+                      Доход: ${stats.total_income || 0}
                     </Typography>
-                    {/* Здесь будет таблица с историей транзакций */}
-                  </Paper>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Typography sx={{ color: '#ffffff' }}>
+                      Расходы: ${stats.total_expenses || 0}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Typography sx={{ color: '#ffffff' }}>
+                      Прибыль: $ {stats.total_profit || 0}
+                    </Typography>
+                  </Grid>
                 </Grid>
               </Paper>
             </Grid>
 
+            {/* Фильтрация по дате */}
+            <Grid item xs={12}>
+              <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
+                <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
+                  Фильтр по дате
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <TextField
+                      fullWidth
+                      label="Дата от"
+                      type="date"
+                      InputLabelProps={{ shrink: true, style: { color: '#ffffff' } }}
+                      InputProps={{ style: { color: '#ffffff' } }}
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      fullWidth
+                      label="Дата до"
+                      type="date"
+                      InputLabelProps={{ shrink: true, style: { color: '#ffffff' } }}
+                      InputProps={{ style: { color: '#ffffff' } }}
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      fullWidth
+                      variant="outlined"
+                      sx={{ mt: 1, color: '#ffffff', borderColor: '#ffffff' }}
+                      onClick={handleApplyDateFilter}
+                    >
+                      Применить фильтр
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+
+            {/* История операций */}
             <Grid item xs={12}>
               <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
                 <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
                   История операций
                 </Typography>
-                <List sx={{ padding: 0, display: 'flex', flexDirection: 'column' }}>
+                <List sx={{ padding: 0 }}>
                   {items.map((item) => (
                     <ListItem key={item.id} sx={{ padding: '0', marginBottom: '4px', display: 'flex', justifyContent: 'space-between' }}>
                       <ListItemText
-                        secondary={`${item.name} Куплено : $${item.buy_price}${item.sell_price ? ` | Продано : $${item.sell_price} | Прибыль : $${(item.sell_price - item.buy_price).toFixed(2)}` : ''}`}
+                        secondary={`${item.name} Куплено: $${item.buy_price}${item.sell_price ? ` | Продано: $${item.sell_price} | Прибыль: $${(item.sell_price - item.buy_price).toFixed(2)}` : ''}`}
                         sx={{
                           '& .MuiListItemText-primary': { color: '#ffffff' },
                           '& .MuiListItemText-secondary': { color: '#ffffff' }
@@ -255,23 +282,18 @@ function App() {
                       <IconButton
                         onClick={() => handleDeleteItem(item.id)}
                         sx={{
-                          bgcolor: 'red', // Красный фон
-                          color: 'white', // Белый цвет для иконки
-                          width: '22px', // Уменьшаем ширину кнопки
-                          height: '22px', // Уменьшаем высоту кнопки
-                          borderRadius: '0', // Убираем округление
-                          '&:hover': {
-                            bgcolor: 'darkred', // Эффект при наведении
-                          },
+                          bgcolor: 'red', color: 'white', width: '22px', height: '22px',
+                          '&:hover': { bgcolor: 'darkred' }
                         }}
                       >
-                        <CloseIcon sx={{ fontSize: '16px', color: 'white' }} />
+                        <CloseIcon sx={{ fontSize: '16px' }} />
                       </IconButton>
                     </ListItem>
                   ))}
                 </List>
               </Paper>
             </Grid>
+
           </Grid>
         </Box>
       </Container>
