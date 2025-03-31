@@ -236,7 +236,7 @@ function App() {
                       </Paper>
                     </Grid>
                   </Grid>
-            </Typography>
+        
             {/* Статистика */}
             <Grid item xs={12}>
               <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
