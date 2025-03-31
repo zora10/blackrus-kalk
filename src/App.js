@@ -76,7 +76,7 @@ function App() {
         setNewItem({ name: '', buyPrice: '' });
         loadItems();
         loadStats();
-        alert('Товар успешно добавлен');
+        
       }
     } catch (error) {
       console.error('Error adding item:', error);
@@ -103,7 +103,7 @@ function App() {
         setSelectedItem(null);
         loadItems();
         loadStats();
-        alert('Продажа успешно зарегистрирована');
+        
       }
     } catch (error) {
       console.error('Error selling item:', error);
@@ -155,7 +155,7 @@ function App() {
       <Container maxWidth="md" sx={{ pb: 4 }}>
         <Box sx={{ mt: 2, mb: 4 }}>
           <Typography variant="h5" component="h1" gutterBottom align="center" sx={{ color: '#ffffff' }}>
-            Калькулятор перепродаж
+            ПЕРЕКУПЕР
           </Typography>
 
           <Grid container spacing={2}>
@@ -163,7 +163,7 @@ function App() {
             <Grid item xs={6}>
               <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
                 <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-                  Добавить новый товар
+                  Купить товар
                 </Typography>
                 <TextField
                   fullWidth
@@ -189,7 +189,7 @@ function App() {
                   disabled={!newItem.name || !newItem.buyPrice}
                   sx={{ mt: 2, color: '#ffffff', borderColor: '#121212' }}
                 >
-                  Добавить товар
+                  Купить товар
                 </Button>
               </Paper>
             </Grid>
@@ -247,17 +247,17 @@ function App() {
               <Grid container spacing={2}>
                 <Grid item xs={4}>
                   <Typography sx={{ color: '#ffffff' }}>
-                    Доход: ${stats.total_income || 0}
+                    Доход: ₽ {stats.total_income || 0}
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
                   <Typography sx={{ color: '#ffffff' }}>
-                    Расходы: ${stats.total_expenses || 0}
+                    Расходы: ₽ {stats.total_expenses || 0}
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
                   <Typography sx={{ color: '#ffffff' }}>
-                    Прибыль: $ {stats.total_profit || 0}
+                    Прибыль: ₽ {stats.total_profit || 0}
                   </Typography>
                 </Grid>
               </Grid>
@@ -317,7 +317,7 @@ function App() {
                 {items.map((item) => (
                   <ListItem key={item.id} sx={{ padding: '0', marginBottom: '4px', display: 'flex', justifyContent: 'space-between' }}>
                     <ListItemText
-                      secondary={`${item.name} Куплено: $${item.buy_price}${item.sell_price ? ` | Продано: $${item.sell_price} | Прибыль: $${(item.sell_price - item.buy_price).toFixed(2)}` : ''}`}
+                      secondary={`${item.name} Куплено: ₽${item.buy_price}${item.sell_price ? ` | Продано: ₽${item.sell_price} | Прибыль: ₽${(item.sell_price - item.buy_price).toFixed(2)}` : ''}`}
                       sx={{
                         '& .MuiListItemText-primary': { color: '#ffffff' },
                         '& .MuiListItemText-secondary': { color: '#ffffff' }
