@@ -159,8 +159,8 @@ function App() {
           </Typography>
 
           <Grid container spacing={2}>
-            {/* Формы добавления и продажи товара */}
-            <Grid item xs={12}>
+            {/* Формы добавления и продажи товара рядом */}
+            <Grid item xs={6}>
               <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
                 <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
                   Добавить новый товар
@@ -193,6 +193,7 @@ function App() {
                 </Button>
               </Paper>
             </Grid>
+
             <Grid item xs={6}>
               <Paper sx={{ p: 2, bgcolor: '#121212', border: '2px solid #121212' }}>
                 <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
@@ -236,7 +237,7 @@ function App() {
               </Paper>
             </Grid>
           </Grid>
-        
+
           {/* Статистика */}
           <Grid item xs={12}>
             <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
@@ -263,79 +264,79 @@ function App() {
             </Paper>
           </Grid>
 
-            {/* Фильтрация по дате */}
-            <Grid item xs={12}>
-              <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
-                <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-                  Фильтр по дате
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      label="Дата от"
-                      type="date"
-                      InputLabelProps={{ shrink: true, style: { color: '#ffffff' } }}
-                      InputProps={{ style: { color: '#ffffff' } }}
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      label="Дата до"
-                      type="date"
-                      InputLabelProps={{ shrink: true, style: { color: '#ffffff' } }}
-                      InputProps={{ style: { color: '#ffffff' } }}
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Button
-                      fullWidth
-                      variant="outlined"
-                      sx={{ mt: 1, color: '#ffffff', borderColor: '#ffffff' }}
-                      onClick={handleApplyDateFilter}
-                    >
-                      Применить фильтр
-                    </Button>
-                  </Grid>
+          {/* Фильтрация по дате */}
+          <Grid item xs={12}>
+            <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
+              <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
+                Фильтр по дате
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Дата от"
+                    type="date"
+                    InputLabelProps={{ shrink: true, style: { color: '#ffffff' } }}
+                    InputProps={{ style: { color: '#ffffff' } }}
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
                 </Grid>
-              </Paper>
-            </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Дата до"
+                    type="date"
+                    InputLabelProps={{ shrink: true, style: { color: '#ffffff' } }}
+                    InputProps={{ style: { color: '#ffffff' } }}
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    sx={{ mt: 1, color: '#ffffff', borderColor: '#ffffff' }}
+                    onClick={handleApplyDateFilter}
+                  >
+                    Применить фильтр
+                  </Button>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
 
-            {/* История операций */}
-            <Grid item xs={12}>
-              <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
-                <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-                  История операций
-                </Typography>
-                <List sx={{ padding: 0 }}>
-                  {items.map((item) => (
-                    <ListItem key={item.id} sx={{ padding: '0', marginBottom: '4px', display: 'flex', justifyContent: 'space-between' }}>
-                      <ListItemText
-                        secondary={`${item.name} Куплено: $${item.buy_price}${item.sell_price ? ` | Продано: $${item.sell_price} | Прибыль: $${(item.sell_price - item.buy_price).toFixed(2)}` : ''}`}
-                        sx={{
-                          '& .MuiListItemText-primary': { color: '#ffffff' },
-                          '& .MuiListItemText-secondary': { color: '#ffffff' }
-                        }}
-                      />
-                      <IconButton
-                        onClick={() => handleDeleteItem(item.id)}
-                        sx={{
-                          bgcolor: 'red', color: 'white', width: '22px', height: '22px',
-                          '&:hover': { bgcolor: 'darkred' }
-                        }}
-                      >
-                        <CloseIcon sx={{ fontSize: '16px' }} />
-                      </IconButton>
-                    </ListItem>
-                  ))}
-                </List>
-              </Paper>
-            </Grid>
+          {/* История операций */}
+          <Grid item xs={12}>
+            <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
+              <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
+                История операций
+              </Typography>
+              <List sx={{ padding: 0 }}>
+                {items.map((item) => (
+                  <ListItem key={item.id} sx={{ padding: '0', marginBottom: '4px', display: 'flex', justifyContent: 'space-between' }}>
+                    <ListItemText
+                      secondary={`${item.name} Куплено: $${item.buy_price}${item.sell_price ? ` | Продано: $${item.sell_price} | Прибыль: $${(item.sell_price - item.buy_price).toFixed(2)}` : ''}`}
+                      sx={{
+                        '& .MuiListItemText-primary': { color: '#ffffff' },
+                        '& .MuiListItemText-secondary': { color: '#ffffff' }
+                      }}
+                    />
+                    <IconButton
+                      onClick={() => handleDeleteItem(item.id)}
+                      sx={{
+                        bgcolor: 'red', color: 'white', width: '22px', height: '22px',
+                        '&:hover': { bgcolor: 'darkred' }
+                      }}
+                    >
+                      <CloseIcon sx={{ fontSize: '16px' }} />
+                    </IconButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Paper>
+          </Grid>
         </Box>
       </Container>
     </ThemeProvider>
