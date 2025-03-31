@@ -336,9 +336,8 @@ function App() {
                 </List>
               </Paper>
             </Grid>
-
-          </Grid>
-        </Box>
+          </Grid> {/* Закрытие Grid */}
+        </Box> {/* Закрытие Box */}
       </Container>
     </ThemeProvider>
   );
