@@ -333,9 +333,10 @@ function App() {
                       </IconButton>
                     </ListItem>
                   ))}
-                </List>
-              </Paper>
-            </Grid>
+              </List>
+            </Paper>
+          </Grid>
+        </Box>
       </Container>
     </ThemeProvider>
   );
