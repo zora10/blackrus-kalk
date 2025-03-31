@@ -150,7 +150,7 @@ function App() {
                     <Grid item xs={6}>
                       <Paper sx={{ p: 2, bgcolor: '#121212', border: '1px solid #121212' }}>
                         <Typography variant="h6" gutterBottom sx={{ color: '#ffffff' }}>
-                          Добавить новый товар
+                          Купить товар
                         </Typography>
                         <TextField
                           fullWidth
