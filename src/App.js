@@ -116,13 +116,13 @@ function App() {
   const handleApplyDateFilter = () => {
     const filteredItems = items.filter(item => {
       // Преобразуем дату товара
-      const itemDate = new Date(item.created_at)// Убираем время, оставляем только дату
+      const itemDate = new Date(item.created_at);// Убираем время, оставляем только дату
   
       // Преобразуем дату начала фильтра (если задана)
-      const start = startDate ? new Date(startDate)// Начало фильтра, без времени
+      const start = startDate ? new Date(startDate);// Начало фильтра, без времени
   
       // Преобразуем дату конца фильтра (если задана)
-      const end = endDate ? new Date(endDate)// Конец фильтра, до конца дня
+      const end = endDate ? new Date(endDate);// Конец фильтра, до конца дня
   
       console.log("Item Date: ", new Date(item.created_at));
       console.log("Start Date: ", startDate, "End Date: ", endDate);
