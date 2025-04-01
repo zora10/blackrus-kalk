@@ -113,21 +113,24 @@ function App() {
     }
   };
 
+  // Фильтрация элементов по дате
   const handleApplyDateFilter = () => {
     const filtered = originalItems.filter(item => {
-      const itemDate = new Date(item.created_at); // Дата товара
-      const start = startDate ? new Date(startDate) : null; // Начало фильтра
-      const end = endDate ? new Date(endDate) : null; // Конец фильтра
-      console.log(itemDate, start, end, start <= itemDate, itemDate <= end);
+      const itemDate = new Date(item.created_at); // Предположим, что это дата в строковом формате
+      const start = startDate ? new Date(startDate) : null;
+      const end = endDate ? new Date(endDate) : null;
+  
+      console.log(itemDate, start, end, itemDate >= start, itemDate <= end);
       
       return (
         (!start || itemDate >= start) &&
         (!end || itemDate <= end)
       );
     });
-
+  
     setFilteredItems(filtered); // Обновляем отфильтрованные данные
   };
+
 
   return (
     <ThemeProvider theme={theme}>
