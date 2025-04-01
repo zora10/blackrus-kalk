@@ -15,7 +15,8 @@ function App() {
   const [stats, setStats] = useState({ total_income: 0, total_expenses: 0, total_profit: 0 });
   const [telegramId, setTelegramId] = useState('');
   const [isIdSubmitted, setIsIdSubmitted] = useState(false);
-
+  const [originalItems, setOriginalItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
   // Для фильтрации по дате
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -41,7 +42,8 @@ function App() {
     try {
       const response = await fetch(`${API_URL}/items/${telegramId}`);
       const data = await response.json();
-      setItems(data);
+      setOriginalItems(data); // Сохраняем все данные в originalItems
+      setFilteredItems(data); // Изначально показываем все данные
     } catch (error) {
       console.error('Error loading items:', error);
       alert('Ошибка при загрузке данных');
@@ -133,22 +135,22 @@ function App() {
 
   // Фильтрация элементов по дате
   const handleApplyDateFilter = () => {
-    const filteredItems = items.filter(item => {
-      const itemDate = new Date(item.created_at);
+    const filtered = originalItems.filter(item => {
+      const itemDate = new Date(item.created_at); // Предположим, что это дата в строковом формате
       const start = startDate ? new Date(startDate) : null;
       const end = endDate ? new Date(endDate) : null;
-      console.log(itemDate,start,end, start >= itemDate, itemDate <= end  );
+  
+      console.log(itemDate, start, end, start >= itemDate, itemDate <= end);
+      
       return (
         (!start || itemDate >= start) &&
         (!end || itemDate <= end)
       );
     });
-    setItems(filteredItems);
+  
+    setFilteredItems(filtered); // Обновляем отфильтрованные данные
   };
 
-  if (!isIdSubmitted) {
-    return <div>Загрузка...</div>;
-  }
 
   return (
     <ThemeProvider theme={theme}>
