@@ -114,37 +114,10 @@ function App() {
   };
 
   const handleApplyDateFilter = () => {
-    const filteredItems = items.filter(item => {
-      // Преобразуем дату товара
-      const itemDate = new Date(item.created_at);// Убираем время, оставляем только дату
-  
-      // Преобразуем дату начала фильтра (если задана)
-      const start = startDate ? new Date(startDate);// Начало фильтра, без времени
-  
-      // Преобразуем дату конца фильтра (если задана)
-      const end = endDate ? new Date(endDate);// Конец фильтра, до конца дня
-  
-      console.log("Item Date: ", new Date(item.created_at));
-      console.log("Start Date: ", startDate, "End Date: ", endDate);
-      console.log("Item Date Comparison:", itemDate, start, end);
-  
-      return (
-        (!start || itemDate >= start) &&
-        (!end || itemDate <= end)
-      );
-    });
-  
-    setItems(filteredItems); // Обновляем список товаров с фильтром
-  };
-
-
-  // Фильтрация элементов по дате
-  const handleApplyDateFilter = () => {
     const filtered = originalItems.filter(item => {
-      const itemDate = new Date(item.created_at); // Предположим, что это дата в строковом формате
-      const start = startDate ? new Date(startDate) : null;
-      const end = endDate ? new Date(endDate) : null;
-  
+      const itemDate = new Date(item.created_at); // Дата товара
+      const start = startDate ? new Date(startDate) : null; // Начало фильтра
+      const end = endDate ? new Date(endDate) : null; // Конец фильтра
       console.log(itemDate, start, end, start <= itemDate, itemDate <= end);
       
       return (
@@ -152,10 +125,9 @@ function App() {
         (!end || itemDate <= end)
       );
     });
-  
+
     setFilteredItems(filtered); // Обновляем отфильтрованные данные
   };
-
 
   return (
     <ThemeProvider theme={theme}>
