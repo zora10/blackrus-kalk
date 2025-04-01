@@ -137,7 +137,7 @@ function App() {
       const itemDate = new Date(item.created_at);
       const start = startDate ? new Date(startDate) : null;
       const end = endDate ? new Date(endDate) : null;
-      console.log(itemDate,start,end);
+      console.log(itemDate,start,end, start >= itemDate, itemDate <= end  );
       return (
         (!start || itemDate >= start) &&
         (!end || itemDate <= end)
