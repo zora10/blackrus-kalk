@@ -113,25 +113,30 @@ function App() {
     }
   };
 
-  const handleDeleteItem = async (id) => {
-    try {
-      const response = await fetch(`${API_URL}/items/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Unknown error');
-      }
-
-      setItems((prevItems) => prevItems.filter(item => item.id !== id));
-    } catch (error) {
-      console.error('Error deleting item:', error.message);
-    }
+  const handleApplyDateFilter = () => {
+    const filteredItems = items.filter(item => {
+      // Преобразуем дату товара
+      const itemDate = new Date(item.created_at).setHours(0, 0, 0, 0); // Убираем время, оставляем только дату
+  
+      // Преобразуем дату начала фильтра (если задана)
+      const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null; // Начало фильтра, без времени
+  
+      // Преобразуем дату конца фильтра (если задана)
+      const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null; // Конец фильтра, до конца дня
+  
+      console.log("Item Date: ", new Date(item.created_at));
+      console.log("Start Date: ", startDate, "End Date: ", endDate);
+      console.log("Item Date Comparison:", itemDate, start, end);
+  
+      return (
+        (!start || itemDate >= start) &&
+        (!end || itemDate <= end)
+      );
+    });
+  
+    setItems(filteredItems); // Обновляем список товаров с фильтром
   };
+
 
   // Фильтрация элементов по дате
   const handleApplyDateFilter = () => {
