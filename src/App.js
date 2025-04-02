@@ -41,17 +41,22 @@ function App() {
       setIsIdSubmitted(true);
     }
   }, []);
+  // Добавьте новое состояние для хранения оригинального списка товаров
+  const [originalItems, setOriginalItems] = useState([]);
+  
+  // В useEffect при загрузке товаров сохраняем оригинальный список
   useEffect(() => {
     const fetchItems = async () => {
       try {
         console.log("Fetching items for user ID:", telegramId);
-        const response = await fetch(`${API_URL}/items/${telegramId}`);
+        const response = await fetch(`/api/items?telegramId=${telegramId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch items');
         }
         const data = await response.json();
         console.log("Fetched items:", data);
         setItems(data);
+        setOriginalItems(data); // Сохраняем оригинальный список
       } catch (error) {
         console.error("Error fetching items:", error);
       }
@@ -171,21 +176,19 @@ function App() {
 
   const handleApplyDateFilter = () => {
     console.log("Starting date filter...");
-    console.log("Original items count:", items.length);
+    console.log("Original items count:", originalItems.length);
     
-    if (!items || items.length === 0) {
+    if (!originalItems || originalItems.length === 0) {
       console.log("No items to filter!");
       return;
     }
   
-    const filteredItems = items.filter(item => {
+    const filteredItems = originalItems.filter(item => {
       try {
-        // Конвертируем даты в Unix timestamp (миллисекунды)
         const itemTimestamp = new Date(item.created_at).getTime();
         const startTimestamp = startDate ? new Date(startDate).getTime() : null;
         const endTimestamp = endDate ? new Date(endDate).getTime() : null;
   
-        // Логируем все значения для отладки
         console.log("----------------------------------------");
         console.log("Item:", item.name);
         console.log("Item created_at:", item.created_at);
@@ -195,13 +198,11 @@ function App() {
         console.log("End date:", endDate);
         console.log("End timestamp:", endTimestamp);
   
-        // Проверяем валидность дат
         if (isNaN(itemTimestamp)) {
           console.error("Invalid item date:", item.created_at);
           return false;
         }
   
-        // Сравниваем timestamps
         const isAfterStart = !startTimestamp || itemTimestamp >= startTimestamp;
         const isBeforeEnd = !endTimestamp || itemTimestamp <= endTimestamp;
   
@@ -222,6 +223,13 @@ function App() {
     console.log("Filtered items:", filteredItems);
     
     setItems(filteredItems);
+  };
+  
+  // Добавьте функцию для сброса фильтра
+  const resetFilter = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setItems(originalItems); // Возвращаем оригинальный список
   };
 
   
