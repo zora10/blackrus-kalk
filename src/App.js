@@ -45,7 +45,7 @@ function App() {
     const fetchItems = async () => {
       try {
         console.log("Fetching items for user ID:", telegramId);
-        const response = await fetch(`/api/items?telegramId=${telegramId}`);
+        const response = await fetch(`${API_URL}/items/${telegramId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch items');
         }
