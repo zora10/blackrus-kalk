@@ -49,7 +49,33 @@ function App() {
       alert('Ошибка при загрузке данных');
     }
   };
-
+  const handleDeleteItem = async (id) => {
+    try {
+      // Отправляем DELETE-запрос на сервер с нужным id
+      const response = await fetch(`${API_URL}/items/${id}`, {
+        method: 'DELETE',  // Указываем метод запроса DELETE
+        headers: {
+          'Content-Type': 'application/json',  // Устанавливаем тип контента
+        },
+      });
+  
+      if (!response.ok) {
+        // Если запрос завершился с ошибкой, выбрасываем ошибку
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Unknown error');
+      }
+  
+      const data = await response.json();  // Получаем ответ от сервера
+      console.log('Item deleted:', data);
+  
+      // Обновляем состояние items, удалив элемент по id
+      // Например, если у вас есть массив items в состоянии компонента, вы можете сделать так:
+      setItems((prevItems) => prevItems.filter(item => item.id !== id));
+  
+    } catch (error) {
+      console.error('Error deleting item:', error.message);
+    }
+  };
   const loadStats = async () => {
     try {
       const response = await fetch(`${API_URL}/stats/${telegramId}`);
