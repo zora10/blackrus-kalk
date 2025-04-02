@@ -178,7 +178,7 @@ function App() {
       console.log("Starting date filter...");
       
       // Получаем свежие данные с сервера
-      const response = await fetch(`/api/items?telegramId=${userId}`);
+      const response = await fetch(`${API_URL}/items/${telegramId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch items');
       }
