@@ -151,27 +151,53 @@ function App() {
   };
 
   const handleApplyDateFilter = () => {
+    console.log("Starting date filter...");
+    console.log("Original items count:", items.length);
+    
     const filteredItems = items.filter(item => {
-      // Преобразуем дату товара
-      const itemDate = new Date(item.created_at).setHours(0, 0, 0, 0); // Убираем время, оставляем только дату
+      try {
+        // Конвертируем даты в Unix timestamp (миллисекунды)
+        const itemTimestamp = new Date(item.created_at).getTime();
+        const startTimestamp = startDate ? new Date(startDate).getTime() : null;
+        const endTimestamp = endDate ? new Date(endDate).getTime() : null;
   
-      // Преобразуем дату начала фильтра (если задана)
-      const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null; // Начало фильтра, без времени
+        // Логируем все значения для отладки
+        console.log("----------------------------------------");
+        console.log("Item:", item.name);
+        console.log("Item created_at:", item.created_at);
+        console.log("Item timestamp:", itemTimestamp);
+        console.log("Start date:", startDate);
+        console.log("Start timestamp:", startTimestamp);
+        console.log("End date:", endDate);
+        console.log("End timestamp:", endTimestamp);
   
-      // Преобразуем дату конца фильтра (если задана)
-      const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null; // Конец фильтра, до конца дня
+        // Проверяем валидность дат
+        if (isNaN(itemTimestamp)) {
+          console.error("Invalid item date:", item.created_at);
+          return false;
+        }
   
-      console.log("Item Date: ", new Date(item.created_at));
-      console.log("Start Date: ", startDate, "End Date: ", endDate);
-      console.log("Item Date Comparison:", itemDate, start, end);
+        // Сравниваем timestamps
+        const isAfterStart = !startTimestamp || itemTimestamp >= startTimestamp;
+        const isBeforeEnd = !endTimestamp || itemTimestamp <= endTimestamp;
   
-      return (
-        (!start || itemDate >= start) &&
-        (!end || itemDate <= end)
-      );
+        console.log("Comparison results:");
+        console.log("Is after start:", isAfterStart);
+        console.log("Is before end:", isBeforeEnd);
+        console.log("Final result:", isAfterStart && isBeforeEnd);
+  
+        return isAfterStart && isBeforeEnd;
+      } catch (error) {
+        console.error("Error processing date:", error);
+        return false;
+      }
     });
   
-    setItems(filteredItems); // Обновляем список товаров с фильтром
+    console.log("----------------------------------------");
+    console.log("Filtered items count:", filteredItems.length);
+    console.log("Filtered items:", filteredItems);
+    
+    setItems(filteredItems);
   };
 
 
