@@ -20,7 +20,7 @@ function App() {
   // Для фильтрации по дате
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-
+  
   useEffect(() => {
     if (window.Telegram && window.Telegram.WebApp) {
       const user = window.Telegram.WebApp.initDataUnsafe;
@@ -41,7 +41,26 @@ function App() {
       setIsIdSubmitted(true);
     }
   }, []);
-
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        console.log("Fetching items for user ID:", telegramId);
+        const response = await fetch(`/api/items?telegramId=${telegramId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch items');
+        }
+        const data = await response.json();
+        console.log("Fetched items:", data);
+        setItems(data);
+      } catch (error) {
+        console.error("Error fetching items:", error);
+      }
+    };
+  
+    if (telegramId) {
+      fetchItems();
+    }
+  }, [telegramId]);
   useEffect(() => {
     if (isIdSubmitted) {
       loadItems();
@@ -154,6 +173,11 @@ function App() {
     console.log("Starting date filter...");
     console.log("Original items count:", items.length);
     
+    if (!items || items.length === 0) {
+      console.log("No items to filter!");
+      return;
+    }
+  
     const filteredItems = items.filter(item => {
       try {
         // Конвертируем даты в Unix timestamp (миллисекунды)
@@ -199,7 +223,6 @@ function App() {
     
     setItems(filteredItems);
   };
-
 
   
 
