@@ -25,9 +25,20 @@ function App() {
     if (window.Telegram && window.Telegram.WebApp) {
       const user = window.Telegram.WebApp.initDataUnsafe;
       if (user && user.user) {
-        setTelegramId(user.user.id.toString()); // Получаем ID из данных Telegram WebApp
-        setIsIdSubmitted(true); // Пропускаем ввод ID, так как он уже получен
+        setTelegramId(user.user.id.toString());
+        console.log('Telegram ID:', user.user.id.toString());
+        setIsIdSubmitted(true);
+      } else {
+        // Если не удалось получить ID из Telegram, используем дефолтный ID
+        setTelegramId('12345');
+        console.log('Using default ID: 12345');
+        setIsIdSubmitted(true);
       }
+    } else {
+      // Если Telegram WebApp не доступен, используем дефолтный ID
+      setTelegramId('12345');
+      console.log('Telegram WebApp not available, using default ID: 12345');
+      setIsIdSubmitted(true);
     }
   }, []);
 
