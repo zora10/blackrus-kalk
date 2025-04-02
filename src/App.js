@@ -140,6 +140,7 @@ function App() {
   };
 
   const handleApplyDateFilter = () => {
+    console.log("start");
     const filteredItems = items.filter(item => {
       // Преобразуем дату товара
       const itemDate = new Date(item.created_at).setHours(0, 0, 0, 0); // Убираем время, оставляем только дату
