@@ -41,15 +41,14 @@ function App() {
       setIsIdSubmitted(true);
     }
   }, []);
-  // Добавьте новое состояние для хранения оригинального списка товаров
-  const [originalItems, setOriginalItems] = useState([]);
+
   
   // В useEffect при загрузке товаров сохраняем оригинальный список
   useEffect(() => {
     const fetchItems = async () => {
       try {
         console.log("Fetching items for user ID:", telegramId);
-        const response = await fetch(`/api/items?telegramId=${telegramId}`);
+        const response = await fetch(`${API_URL}/items/${telegramId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch items');
         }
