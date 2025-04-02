@@ -317,7 +317,7 @@ function App() {
                     sx={{ mt: 1, color: '#ffffff', borderColor: '#ffffff' }}
                     onClick={handleApplyDateFilter}
                   >
-                    Применить фильтр
+                    Применить
                   </Button>
                 </Grid>
               </Grid>
