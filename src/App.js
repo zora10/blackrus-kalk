@@ -174,62 +174,69 @@ function App() {
     }
   };
 
-  const handleApplyDateFilter = () => {
-    console.log("Starting date filter...");
-    console.log("Original items count:", originalItems.length);
-    
-    if (!originalItems || originalItems.length === 0) {
-      console.log("No items to filter!");
-      return;
-    }
+  const handleApplyDateFilter = async () => {
+    try {
+      console.log("Starting date filter...");
+      
+      // Получаем свежие данные с сервера
+      const response = await fetch(`/api/items?telegramId=${userId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch items');
+      }
+      const freshData = await response.json();
+      console.log("Fresh data from server:", freshData);
+      
+      // Обновляем оригинальный список
+      setOriginalItems(freshData);
+      
+      if (!freshData || freshData.length === 0) {
+        console.log("No items to filter!");
+        return;
+      }
   
-    const filteredItems = originalItems.filter(item => {
-      try {
-        const itemTimestamp = new Date(item.created_at).getTime();
-        const startTimestamp = startDate ? new Date(startDate).getTime() : null;
-        const endTimestamp = endDate ? new Date(endDate).getTime() : null;
+      const filteredItems = freshData.filter(item => {
+        try {
+          const itemTimestamp = new Date(item.created_at).getTime();
+          const startTimestamp = startDate ? new Date(startDate).getTime() : null;
+          const endTimestamp = endDate ? new Date(endDate).getTime() : null;
   
-        console.log("----------------------------------------");
-        console.log("Item:", item.name);
-        console.log("Item created_at:", item.created_at);
-        console.log("Item timestamp:", itemTimestamp);
-        console.log("Start date:", startDate);
-        console.log("Start timestamp:", startTimestamp);
-        console.log("End date:", endDate);
-        console.log("End timestamp:", endTimestamp);
+          console.log("----------------------------------------");
+          console.log("Item:", item.name);
+          console.log("Item created_at:", item.created_at);
+          console.log("Item timestamp:", itemTimestamp);
+          console.log("Start date:", startDate);
+          console.log("Start timestamp:", startTimestamp);
+          console.log("End date:", endDate);
+          console.log("End timestamp:", endTimestamp);
   
-        if (isNaN(itemTimestamp)) {
-          console.error("Invalid item date:", item.created_at);
+          if (isNaN(itemTimestamp)) {
+            console.error("Invalid item date:", item.created_at);
+            return false;
+          }
+  
+          const isAfterStart = !startTimestamp || itemTimestamp >= startTimestamp;
+          const isBeforeEnd = !endTimestamp || itemTimestamp <= endTimestamp;
+  
+          console.log("Comparison results:");
+          console.log("Is after start:", isAfterStart);
+          console.log("Is before end:", isBeforeEnd);
+          console.log("Final result:", isAfterStart && isBeforeEnd);
+  
+          return isAfterStart && isBeforeEnd;
+        } catch (error) {
+          console.error("Error processing date:", error);
           return false;
         }
+      });
   
-        const isAfterStart = !startTimestamp || itemTimestamp >= startTimestamp;
-        const isBeforeEnd = !endTimestamp || itemTimestamp <= endTimestamp;
-  
-        console.log("Comparison results:");
-        console.log("Is after start:", isAfterStart);
-        console.log("Is before end:", isBeforeEnd);
-        console.log("Final result:", isAfterStart && isBeforeEnd);
-  
-        return isAfterStart && isBeforeEnd;
-      } catch (error) {
-        console.error("Error processing date:", error);
-        return false;
-      }
-    });
-  
-    console.log("----------------------------------------");
-    console.log("Filtered items count:", filteredItems.length);
-    console.log("Filtered items:", filteredItems);
-    
-    setItems(filteredItems);
-  };
-  
-  // Добавьте функцию для сброса фильтра
-  const resetFilter = () => {
-    setStartDate(null);
-    setEndDate(null);
-    setItems(originalItems); // Возвращаем оригинальный список
+      console.log("----------------------------------------");
+      console.log("Filtered items count:", filteredItems.length);
+      console.log("Filtered items:", filteredItems);
+      
+      setItems(filteredItems);
+    } catch (error) {
+      console.error("Error applying date filter:", error);
+    }
   };
 
   
