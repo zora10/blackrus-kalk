@@ -32,11 +32,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (isIdSubmitted) {
+    if (telegramId) {
       loadItems();
       loadStats();
     }
-  }, [isIdSubmitted]);
+  }, [telegramId]);
+
 
   const loadItems = async () => {
     try {
