@@ -32,12 +32,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (telegramId) {
+    if (isIdSubmitted) {
       loadItems();
       loadStats();
     }
-  }, [telegramId]);
-
+  }, [isIdSubmitted]);
 
   const loadItems = async () => {
     try {
@@ -50,33 +49,7 @@ function App() {
       alert('Ошибка при загрузке данных');
     }
   };
-  const handleDeleteItem = async (id) => {
-    try {
-      // Отправляем DELETE-запрос на сервер с нужным id
-      const response = await fetch(`${API_URL}/items/${id}`, {
-        method: 'DELETE',  // Указываем метод запроса DELETE
-        headers: {
-          'Content-Type': 'application/json',  // Устанавливаем тип контента
-        },
-      });
-  
-      if (!response.ok) {
-        // Если запрос завершился с ошибкой, выбрасываем ошибку
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Unknown error');
-      }
-  
-      const data = await response.json();  // Получаем ответ от сервера
-      console.log('Item deleted:', data);
-  
-      // Обновляем состояние items, удалив элемент по id
-      // Например, если у вас есть массив items в состоянии компонента, вы можете сделать так:
-      setItems((prevItems) => prevItems.filter(item => item.id !== id));
-  
-    } catch (error) {
-      console.error('Error deleting item:', error.message);
-    }
-  };
+
   const loadStats = async () => {
     try {
       const response = await fetch(`${API_URL}/stats/${telegramId}`);
@@ -141,18 +114,17 @@ function App() {
   };
 
   const handleApplyDateFilter = () => {
-    console.log("start");
-  
-    // Выводим все элементы, которые мы собираемся фильтровать
-    console.log("Items before filtering: ", items);
-  
     const filteredItems = items.filter(item => {
-      const itemDate = new Date(item.created_at).getTime(); // Преобразуем дату товара в UNIX время
+      // Преобразуем дату товара
+      const itemDate = new Date(item.created_at).setHours(0, 0, 0, 0); // Убираем время, оставляем только дату
   
-      const start = startDate ? new Date(startDate).getTime() : null; // Начало фильтра
-      const end = endDate ? new Date(endDate).getTime() : null; // Конец фильтра
+      // Преобразуем дату начала фильтра (если задана)
+      const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null; // Начало фильтра, без времени
   
-      console.log("Item Date: ", itemDate);
+      // Преобразуем дату конца фильтра (если задана)
+      const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null; // Конец фильтра, до конца дня
+  
+      console.log("Item Date: ", new Date(item.created_at));
       console.log("Start Date: ", startDate, "End Date: ", endDate);
       console.log("Item Date Comparison:", itemDate, start, end);
   
@@ -162,10 +134,8 @@ function App() {
       );
     });
   
-    console.log("Filtered items: ", filteredItems);
     setItems(filteredItems); // Обновляем список товаров с фильтром
   };
-
 
 
   
@@ -321,7 +291,7 @@ function App() {
                     sx={{ mt: 1, color: '#ffffff', borderColor: '#ffffff' }}
                     onClick={handleApplyDateFilter}
                   >
-                    Применить
+                    Применить фильтр
                   </Button>
                 </Grid>
               </Grid>
