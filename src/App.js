@@ -141,25 +141,27 @@ function App() {
 
   const handleApplyDateFilter = () => {
     console.log("start");
+  
+    // Выводим все элементы, которые мы собираемся фильтровать
+    console.log("Items before filtering: ", items);
+  
     const filteredItems = items.filter(item => {
-      // Преобразуем дату товара в UNIX время (в миллисекундах)
-      const itemDate = new Date(item.created_at).getTime(); // Убираем время, оставляем только дату
-    
-      // Преобразуем дату начала фильтра в UNIX время (если задана)
-      const start = startDate ? new Date(startDate).getTime() : null; // Начало фильтра, без времени
-    
-      // Преобразуем дату конца фильтра в UNIX время (если задана)
-      const end = endDate ? new Date(endDate).getTime() : null; // Конец фильтра, до конца дня
-    
+      const itemDate = new Date(item.created_at).getTime(); // Преобразуем дату товара в UNIX время
+  
+      const start = startDate ? new Date(startDate).getTime() : null; // Начало фильтра
+      const end = endDate ? new Date(endDate).getTime() : null; // Конец фильтра
+  
       console.log("Item Date: ", itemDate);
-      console.log("Start Date: ", start, "End Date: ", end);
-    
+      console.log("Start Date: ", startDate, "End Date: ", endDate);
+      console.log("Item Date Comparison:", itemDate, start, end);
+  
       return (
         (!start || itemDate >= start) &&
         (!end || itemDate <= end)
       );
     });
   
+    console.log("Filtered items: ", filteredItems);
     setItems(filteredItems); // Обновляем список товаров с фильтром
   };
 
