@@ -135,11 +135,19 @@ function App() {
       });
 
       if (response.ok) {
+        const newItemData = await response.json();  // Получаем новый товар из ответа сервера
+
+        // Обновляем состояние, добавляя новый товар
+        setItems(prevItems => [...prevItems, newItemData]);
+  
+        // Очищаем форму добавления товара
         setNewItem({ name: '', buyPrice: '' });
-        loadItems();
+  
+        // Также обновляем статистику
         loadStats();
-        
       }
+        
+      
     } catch (error) {
       console.error('Error adding item:', error);
       alert('Ошибка при добавлении товара');
