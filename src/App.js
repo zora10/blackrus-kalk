@@ -78,6 +78,7 @@ function App() {
       const data = await response.json();
       setOriginalItems(data); // Сохраняем все данные в originalItems
       setFilteredItems(data); // Изначально показываем все данные
+      setItems(data);
     } catch (error) {
       console.error('Error loading items:', error);
       alert('Ошибка при загрузке данных');
