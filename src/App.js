@@ -157,7 +157,7 @@ function App() {
 
   const handleSellItem = async () => {
     if (!selectedItem || !sellPrice) return;
-
+  
     try {
       const response = await fetch(`${API_URL}/items/${selectedItem.id}/sell`, {
         method: 'PUT',
@@ -168,20 +168,27 @@ function App() {
           sellPrice: Number(sellPrice)
         }),
       });
-
+  
       if (response.ok) {
+        // Обновляем вручную filteredItems, чтобы отразить продажу сразу
+        setFilteredItems((prevItems) =>
+          prevItems.map((item) =>
+            item.id === selectedItem.id
+              ? { ...item, sell_price: Number(sellPrice) }
+              : item
+          )
+        );
+  
         setSellPrice('');
         setSelectedItem(null);
-        loadItems();
-        loadStats();
-        
+        loadItems();  // чтобы остальные данные обновились
+        loadStats();  // обновляем статистику
       }
     } catch (error) {
       console.error('Error selling item:', error);
       alert('Ошибка при регистрации продажи');
     }
   };
-
   const handleApplyDateFilter = async () => {
     try {
       console.log("Starting date filter...");
